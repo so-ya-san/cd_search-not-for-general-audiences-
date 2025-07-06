@@ -1,0 +1,47 @@
+import { useState } from 'react';
+import cdList from './data/cd_list.json';
+
+function TrackSearch() {
+    const [query, setQuery] = useState('');
+    const [artistQuery, setArtistQuery] = useState('');
+    const [tracks] = useState(cdList);
+
+    const filteredTracks = tracks.filter(track => {
+        const q = query.toLowerCase();
+        const aq = artistQuery.toLowerCase();
+        return (
+            track.title.toLowerCase().includes(q) &&
+            track.artist.toLowerCase().includes(aq)
+        );
+    });
+
+    return (
+        <div style={{ maxWidth: 600, margin: '0 auto', padding: 16 }}>
+            <h1>CD曲名・アーティスト検索ツール</h1>
+            <input
+                placeholder="曲名で検索"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                style={{ width: '100%', padding: 8, marginBottom: 8 }}
+            />
+            <input
+                placeholder="アーティスト名で検索"
+                value={artistQuery}
+                onChange={(e) => setArtistQuery(e.target.value)}
+                style={{ width: '100%', padding: 8, marginBottom: 16 }}
+            />
+            <div>
+                {filteredTracks.map((track, index) => (
+                    <div key={index} style={{ border: '1px solid #ccc', padding: 8, marginBottom: 8 }}>
+                        <div>曲名: {track.title}</div>
+                        <div>アーティスト: {track.artist}</div>
+                        <div>保管場所: {track.location}</div>
+                    </div>
+                ))}
+                {filteredTracks.length === 0 && <div>該当する曲が見つかりません。</div>}
+            </div>
+        </div>
+    );
+}
+
+export default TrackSearch;
