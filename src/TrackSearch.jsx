@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import cdList from './data/cd_list.json';
 import './styles.css';
+const SERVER_URL = 'https://cd-server.onrender.com';
 
 function TrackSearch() {
     const [entryAuthorized, setEntryAuthorized] = useState(false);
@@ -31,7 +32,7 @@ function TrackSearch() {
     const addTrack = async () => {
         if (!newTrack.title || !newTrack.artist || !newTrack.location) return;
         try {
-            const res = await fetch('http://localhost:3001/api/addTrack', {
+            const res = await fetch(`${SERVER_URL}/api/addTrack`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newTrack),
@@ -47,8 +48,7 @@ function TrackSearch() {
     const deleteTrack = async (index) => {
         if (!window.confirm('削除してもよろしいですか？')) return;
         try {
-            await fetch(`http://localhost:3001/api/deleteTrack/${index}`, {
-                method: 'DELETE',
+            await fetch(`${SERVER_URL}/api/updateTrack/${editIndex}`, {                method: 'DELETE',
             });
             const updated = [...tracks];
             updated.splice(index, 1);
@@ -65,7 +65,7 @@ function TrackSearch() {
 
     const saveEdit = async () => {
         try {
-            await fetch(`http://localhost:3001/api/updateTrack/${editIndex}`, {
+            await fetch(`${SERVER_URL}/api/updateTrack/${editIndex}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(editTrack),
@@ -88,7 +88,7 @@ function TrackSearch() {
     const sendRequest = async () => {
         const track = tracks[requestingIndex];
         try {
-            await fetch('http://localhost:3001/api/requestTrack', {
+            await fetch(`${SERVER_URL}/api/requestTrack`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nickname, track }),
@@ -104,7 +104,7 @@ function TrackSearch() {
 
     const fetchRequests = async () => {
         try {
-            const res = await fetch('http://localhost:3001/api/getRequests');
+            await fetch(`${SERVER_URL}/api/getRequests`)
             const data = await res.json();
             setRequests(data);
         } catch {
